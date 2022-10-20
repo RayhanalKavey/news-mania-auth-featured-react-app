@@ -2,21 +2,23 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import { Link } from "react-router-dom";
 import Image from "react-bootstrap/Image";
-import { FaRegBookmark, FaShareAlt, IconName } from "react-icons/fa";
+import { FaEye, FaRegBookmark, FaShareAlt, FaStar } from "react-icons/fa";
 
 const NewsSummaryCard = ({ news }) => {
-  const { _id, title, total_view, author, details, image_url } = news;
-  const { name, published_date, img } = author;
-  console.log(news);
+  const { _id, title, total_view, author, details, image_url, rating } = news;
   return (
     <Card className=" mb-5">
       <Card.Header>
         <div className="d-flex justify-content-between align-items-center">
           <div className="d-flex gap-2 justify-content-center align-items-start">
-            <Image roundedCircle style={{ height: "60px" }} src={img}></Image>
+            <Image
+              roundedCircle
+              style={{ height: "60px" }}
+              src={author?.img}
+            ></Image>
             <div>
-              <h5>{name}</h5>
-              <p>{published_date}</p>
+              <h5>{author?.name}</h5>
+              <p>{author?.published_date}</p>
             </div>
           </div>
           <div>
@@ -39,7 +41,16 @@ const NewsSummaryCard = ({ news }) => {
           )}{" "}
         </Card.Text>
       </Card.Body>
-      <Card.Footer className="text-muted">2 days ago</Card.Footer>
+      <Card.Footer className="text-muted d-flex justify-content-between">
+        <div className="d-flex align-items-center gap-2">
+          <FaStar className="text-warning"></FaStar>
+          <span>{rating?.number}</span>
+        </div>
+        <div className="d-flex align-items-center gap-2">
+          <FaEye></FaEye>
+          <span>{total_view}</span>
+        </div>
+      </Card.Footer>
     </Card>
   );
 };
