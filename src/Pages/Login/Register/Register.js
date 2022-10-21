@@ -41,7 +41,7 @@ const Register = () => {
         setError(error.message);
       });
   };
-  //update user
+  // notE update user when cheating.// we also update using this in the profile
   const handleUpdateUserProfile = (name, photoURL) => {
     const profile = {
       displayName: name,
