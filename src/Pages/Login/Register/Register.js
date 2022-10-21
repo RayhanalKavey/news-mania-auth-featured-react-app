@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../../../contexts/AuthProvider/AuthProvider";
 
 const Register = () => {
+  const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState("");
-  const { createUser, signIn } = useContext(AuthContext);
+  const { createUser, updateUserProfile } = useContext(AuthContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -19,16 +21,38 @@ const Register = () => {
     ////email and password login
     createUser(email, password)
       .then((result) => {
+        // User create here
         const user = result.user;
         //- reset user
         form.reset(user);
         //reset error message
         setError("");
+
+        //Update user
+        handleUpdateUserProfile(name, photoURL);
       })
       .catch((error) => {
         console.log(error);
         setError(error.message);
       });
+  };
+  //update user
+  const handleUpdateUserProfile = (name, photoURL) => {
+    const profile = {
+      displayName: name,
+      photoURL: photoURL,
+    };
+    updateUserProfile(profile)
+      .then(() => {})
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  //Accept terms and condition
+  const handleTermsAndCondition = (event) => {
+    // console.log(event.target.checked);
+    setAccepted(event.target.checked);
   };
 
   return (
@@ -64,10 +88,23 @@ const Register = () => {
           required
         />
       </Form.Group>
-      {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label="Check me out" />
-      </Form.Group> */}
-      <Button className="d-block" variant="primary" type="submit">
+      <Form.Group className="mb-3" controlId="formBasicCheckbox">
+        <Form.Check
+          onClick={handleTermsAndCondition}
+          type="checkbox"
+          label={
+            <>
+              Accept <Link to="/terms">terms and conditions</Link>
+            </>
+          }
+        />
+      </Form.Group>
+      <Button
+        className="d-block"
+        variant="primary"
+        type="submit"
+        disabled={!accepted}
+      >
         Register
       </Button>
       <Form.Text className="d-block p-2 my-4 text-danger">{error}</Form.Text>
