@@ -1,13 +1,15 @@
 import React, { useContext, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../contexts/AuthProvider/AuthProvider";
 
 const Register = () => {
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState("");
-  const { createUser, updateUserProfile } = useContext(AuthContext);
+  const { createUser, updateUserProfile, verifyEmail } =
+    useContext(AuthContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -30,6 +32,9 @@ const Register = () => {
 
         //Update user
         handleUpdateUserProfile(name, photoURL);
+        //verify email
+        handleEmailVerification();
+        toast.success("Please verify your email address before login!");
       })
       .catch((error) => {
         console.log(error);
@@ -48,7 +53,12 @@ const Register = () => {
         console.error(error);
       });
   };
-
+  // varify email
+  const handleEmailVerification = () => {
+    verifyEmail()
+      .then(() => {})
+      .catch((error) => console.error(error));
+  };
   //Accept terms and condition
   const handleTermsAndCondition = (event) => {
     // console.log(event.target.checked);
@@ -100,13 +110,15 @@ const Register = () => {
         />
       </Form.Group>
       <Button
-        className="d-block"
+        className={`btn ${!accepted ? " btn-danger" : " btn-primary"}`}
+        // className={!accepted ? "btn btn-danger" : "btn btn-primary"}
         variant="primary"
         type="submit"
         disabled={!accepted}
       >
         Register
       </Button>
+
       <Form.Text className="d-block p-2 my-4 text-danger">{error}</Form.Text>
     </Form>
   );

@@ -1,13 +1,14 @@
 import React, { useContext, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../contexts/AuthProvider/AuthProvider";
 
 //-------------
 const Login = () => {
   const [error, setError] = useState("");
-  const { signIn } = useContext(AuthContext);
+  const { signIn, setLoading } = useContext(AuthContext);
   //-------------notE redirect user
   const navigate = useNavigate();
   //-------------notE user location where they want to go
@@ -27,15 +28,25 @@ const Login = () => {
         const user = result.user;
         //- reset user
         form.reset(user);
-
-        //-notE redirect user when login
-        navigate(from, { replace: true });
+        // notE login after email verification
+        if (user.emailVerified) {
+          //-notE redirect user when login
+          navigate(from, { replace: true });
+        } else {
+          toast.error(
+            "Your email is not verified !! Please verify your email address."
+          );
+        }
         //-Clear error
         setError("");
       })
       .catch((error) => {
         console.error(error);
         setError(error.message);
+      })
+      .finally(() => {
+        // notE solve always show spinner/ this error occurs because we enforce user to verify email
+        setLoading(false);
       });
   };
   return (
@@ -59,9 +70,7 @@ const Login = () => {
           required
         />
       </Form.Group>
-      {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label="Check me out" />
-      </Form.Group> */}
+
       <Button className="d-block " variant="primary" type="submit">
         Login
       </Button>
