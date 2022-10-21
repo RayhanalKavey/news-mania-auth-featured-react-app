@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 
 const News = () => {
   const news = useLoaderData();
-  const { _id, title, details, image_url, category_id } = news;
+  const { title, details, image_url, category_id } = news;
   // console.log(news);
   return (
     <Card>
