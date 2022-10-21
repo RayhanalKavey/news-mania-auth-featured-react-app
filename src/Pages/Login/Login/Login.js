@@ -1,14 +1,20 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../contexts/AuthProvider/AuthProvider";
 
 //-------------
 const Login = () => {
+  const [error, setError] = useState("");
   const { signIn } = useContext(AuthContext);
   //-------------notE redirect user
   const navigate = useNavigate();
+  //-------------notE user location where they want to go
+
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+  //---------
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.target;
@@ -22,11 +28,14 @@ const Login = () => {
         //- reset user
         form.reset(user);
 
-        //- redirect user
-        navigate("/");
+        //-notE redirect user when login
+        navigate(from, { replace: true });
+        //-Clear error
+        setError("");
       })
       .catch((error) => {
         console.error(error);
+        setError(error.message);
       });
   };
   return (
@@ -49,16 +58,14 @@ const Login = () => {
           placeholder="Password"
           required
         />
-        {/* <Form.Text className="text-danger">
-          We'll never share your email with anyone else.
-        </Form.Text> */}
       </Form.Group>
       {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
         <Form.Check type="checkbox" label="Check me out" />
       </Form.Group> */}
-      <Button variant="primary" type="submit">
+      <Button className="d-block " variant="primary" type="submit">
         Login
       </Button>
+      <Form.Text className="d-block  p-2 my-4 text-danger">{error}</Form.Text>
     </Form>
   );
 };

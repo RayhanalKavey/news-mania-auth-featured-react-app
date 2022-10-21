@@ -1,9 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { AuthContext } from "../../../contexts/AuthProvider/AuthProvider";
 
 const Register = () => {
+  const [error, setError] = useState("");
   const { createUser, signIn } = useContext(AuthContext);
 
   const handleSubmit = (event) => {
@@ -21,9 +22,12 @@ const Register = () => {
         const user = result.user;
         //- reset user
         form.reset(user);
+        //reset error message
+        setError("");
       })
       .catch((error) => {
         console.log(error);
+        setError(error.message);
       });
   };
 
@@ -59,16 +63,14 @@ const Register = () => {
           placeholder="Password"
           required
         />
-        {/* <Form.Text className="text-danger">
-          We'll never share your email with anyone else.
-        </Form.Text> */}
       </Form.Group>
       {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
         <Form.Check type="checkbox" label="Check me out" />
       </Form.Group> */}
-      <Button variant="primary" type="submit">
+      <Button className="d-block" variant="primary" type="submit">
         Register
       </Button>
+      <Form.Text className="d-block p-2 my-4 text-danger">{error}</Form.Text>
     </Form>
   );
 };
