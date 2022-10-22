@@ -17,7 +17,7 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Home></Home>,
-        loader: () => fetch("http://localhost:5005/news"),
+        loader: () => fetch("https://news-mania-server.vercel.app/news"),
       },
       // {
       //   path: "/home",
@@ -27,7 +27,7 @@ export const router = createBrowserRouter([
         path: "/category/:id",
         element: <Category></Category>,
         loader: ({ params }) =>
-          fetch(`http://localhost:5005/category/${params.id}`),
+          fetch(`https://news-mania-server.vercel.app/category/${params.id}`),
       },
       {
         path: "/news/:id",
@@ -38,7 +38,7 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
         loader: ({ params }) =>
-          fetch(`http://localhost:5005/news/${params.id}`),
+          fetch(`https://news-mania-server.vercel.app/news/${params.id}`),
       },
       {
         path: "/login",
